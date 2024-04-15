@@ -241,14 +241,16 @@ xlabel('Eb/No');
 ylabel('BER');
 hold off;
 end
+
 % Description:
 % This function plots the eye diagram for a given filtered data with specified delay.
 %
 % Input:
 % - filtered_data: The filtered data for which to plot the eye diagram.
+% - sample_per_bit: the samples per bit
+% - R: the rolloff factor
 % - delay: The delay used in the filtering process.
-% - case_num: The number of the case (used for the title of the figure).
-%
+% - place: whether it's present in transmitter or receiver
 function plot_eye_diagram(filtered_data, sample_per_bit, R, delay, place)
     eyediagram(filtered_data, 2 * sample_per_bit);
     title(sprintf('%s Eye Diagram for Case: R=%d Delay=%d', place, R, delay));
