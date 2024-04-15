@@ -97,6 +97,8 @@ noise=randn(size(transmitter_out));
 SNR_vector=[-2 -1 0 1 2 3 4 5];
 normalized_energy_bit=1;
 for i=1:length(SNR_vector)
+    %resetting the noise
+    noise=randn(size(transmitter_out));
     %calculate variance from SNR (SNR=Eb/No)
     No_vector(i)=normalized_energy_bit / 10^(SNR_vector(i)/10);
     variance_vector(i)=No_vector(i)/2; %variance=No/2
