@@ -137,6 +137,30 @@ plot_BER(SNR_vector,BER_matched,BER_theoritical,'Matched filter output BER Vs th
 %plot rect filter BER vs theoritical
 plot_BER(SNR_vector,BER_rect,BER_theoritical,'rect filter output BER Vs theoritical BER');
 
+% ------------ ISI and square root raised cosine -----------------%
+% Parameters
+num_bits = 100;
+sample_per_bit = 5;
+symbol_rate = 1; % sample per bit / 5 
+data_train = generate_random_data(num_bits,sample_per_bit);
+Rs = [0, 0, 1, 1];      % Rolloff factors for each case
+delays = [2, 8, 2, 8];  % Filter delays for each case
+num_cases = numel(Rs);
+
+% Generate square root raised cosine filter coefficients for each case
+for i = 1:num_cases
+    R = Rs(i);
+    delay = delays(i);
+    filter =  rcosine(symbol_rate, sample_per_bit, 'sqrt', R, delay);
+    tx_filtered_signal = conv(data_train, filter, 'same');
+    rx_filtered_signal = conv(tx_filtered_signal, filter, 'same');
+    % Plot eye diagram
+    plot_eye_diagram(tx_filtered_signal, sample_per_bit, R, delay, 'Transmitter');
+    plot_eye_diagram(rx_filtered_signal, sample_per_bit, R, delay, 'Receiver');
+end
+
+
+
 % Descripion :
 % This Function Generates a Random sample Of Data
 % Input : number of bits required 
@@ -216,4 +240,18 @@ title(str);
 xlabel('Eb/No');
 ylabel('BER');
 hold off;
+end
+% Description:
+% This function plots the eye diagram for a given filtered data with specified delay.
+%
+% Input:
+% - filtered_data: The filtered data for which to plot the eye diagram.
+% - delay: The delay used in the filtering process.
+% - case_num: The number of the case (used for the title of the figure).
+%
+function plot_eye_diagram(filtered_data, sample_per_bit, R, delay, place)
+    eyediagram(filtered_data, 2 * sample_per_bit);
+    title(sprintf('%s Eye Diagram for Case: R=%d Delay=%d', place, R, delay));
+    xlabel('Time');
+    ylabel('Amplitude');
 end
