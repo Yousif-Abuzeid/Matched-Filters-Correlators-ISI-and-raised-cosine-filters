@@ -19,61 +19,66 @@ rect_energy=5;
 rect=[1 1 1 1 1]/sqrt(rect_energy);
 %Rect Filter output
 rect_filter_out=conv(transmitter_out,rect);
-
-%plot both outcomes on the same figure
+%plots configurations
+xlim_start=0;
+xlim_end=50;
 %----requirement 1-(a)----  
-figure(1); 
-subplot(2,1,1) 
-plot(matched_filter_out);  
-xlabel('time');
-ylabel('Amplitude');
-title('Matched filter output'); 
-subplot(2,1,2)
-xlabel('time');
-ylabel('Amplitude');
-plot(rect_filter_out, 'r');  
-title('Rect filter output');
-
-%plot both outcomes after sampling on the same figure
+%plot both outcomes before and after sampling
 %matched filter
 sampling_instants=5*[1:10];
 sampled_matched_filter_out=matched_filter_out(5:5:50);
-figure(2);
+figure(1);
 subplot(2,1,1)
-stem(sampling_instants,sampled_matched_filter_out);
+plot(matched_filter_out);
+hold on;
+stem(sampling_instants,sampled_matched_filter_out,'g');
+legend("Matched Filter Output","Matched Filter Output Sampled");
 xlabel('time');
 ylabel('Amplitude');
-title('Matched filter output after sampling'); 
+title('Matched filter output'); 
+xlim([xlim_start xlim_end ]);
+hold off;
 %rect filter
 sampled_rect_filter_out=rect_filter_out(5:5:50);
 subplot(2,1,2)
+plot(rect_filter_out, 'b');
+hold on;
 stem(sampling_instants,sampled_rect_filter_out,'r');
+legend("Rect Filter Output","Rect Filter Output Sampled");
 xlabel('time');
 ylabel('Amplitude');
-title('Rect filter output after sampling');
+xlim([xlim_start xlim_end ]);
+title('Rect filter output');
+hold off;
+
 
 %----requirement 1-(b)---- 
 corr_out = correlator(transmitter_out,pulse,num_bits_10,samples_per_bit);
-figure(3)
+
+%plot both outcomes before and after sampling 
+figure(2);
+%matched filter
+subplot(2,1,1);
 plot(matched_filter_out);
 hold on;
-plot(corr_out,'r');
-title('Matched filter output Vs Correlator output'); 
-xlabel('time');
-ylabel('Amplitude');
-hold off;
-
-%plot both outcomes after sampling 
-figure(4);
-%matched filter
 stem(sampling_instants,sampled_matched_filter_out);
-hold on;
-%correlator
-sampled_corr_out=corr_out(5:5:50);
-stem(sampling_instants,sampled_corr_out,'r');
-title('Matched filter output Vs Correlator output after sampling'); 
+legend("Matched Filter Output","Matched Filter Output Sampled");
 xlabel('time');
 ylabel('Amplitude');
+title('Matched filter output'); 
+xlim([xlim_start xlim_end ]);
+hold off
+%correlator
+subplot(2,1,2);
+sampled_corr_out=corr_out(5:5:50);
+plot(corr_out,'g');
+hold on;
+stem(sampling_instants,sampled_corr_out,'r');
+legend("Correlator Output","Correlator Output Sampled");
+xlabel('time');
+ylabel('Amplitude');
+xlim([xlim_start xlim_end ]);
+title('Correlator output'); 
 hold off;
 
 
