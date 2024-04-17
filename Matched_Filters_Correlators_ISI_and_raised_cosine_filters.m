@@ -93,6 +93,7 @@ semilogy(SNR_vector,BER_theoritical);
 title(str); 
 xlabel('Eb/No');
 ylabel('BER');
+legend("Calculated filter Output BER","Theoritical BER");
 hold off;
 end
 
