@@ -59,13 +59,13 @@ end
 end
 
 % Description :
-% This Fucntion  Samples the matched filter output every Ts (5 samples)
+% This Fucntion  Samples the given filter output every Ts (5 samples)
 %        and generates an array consisting of 10000 samples estimating the
 %        value of each bit (1 or -1)
 % Input: samples_per_bit
 %        num_bits_10K   
 %        matched_filter_out_10k 
-%output: sampled_matched_filter_out_10k: the estimated array of bits
+%output: sampled_filter_out_10k: the estimated array of bits
 function [sampled_filter_out_10k]= estimate(samples_per_bit,num_bits_10K,filter_out_10k)
 sampled_filter_out_10k=filter_out_10k(samples_per_bit:samples_per_bit:5*num_bits_10K);
 for i=1:num_bits_10K
@@ -224,16 +224,14 @@ function nois_analysis
     SNR_vector=[-2 -1 0 1 2 3 4 5];
     normalized_energy_bit=1;
     for i=1:length(SNR_vector)
-        %resetting the noise
-        noise=randn(size(transmitter_out));
         %calculate variance from SNR (SNR=Eb/No)
         No_vector(i)=normalized_energy_bit / 10^(SNR_vector(i)/10);
         variance_vector(i)=No_vector(i)/2; %variance=No/2
         %Scale the noise sequence to have variance = N0/2 by multiplying the sequence
         %by sqrt(N0/2). 
-        noise=sqrt(variance_vector(i)) * noise; 
+        scaled_noise=sqrt(variance_vector(i)) * noise; 
         %Add the noise to the transmitted sequence
-        noisy_signal=transmitter_out + noise;
+        noisy_signal=transmitter_out + scaled_noise;
         %matched filter output
         matched_filter_out_10k=conv(noisy_signal,matched_filter);
         %Rect Filter output
